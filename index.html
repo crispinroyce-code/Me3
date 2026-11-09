@@ -347,7 +347,7 @@ $("#specialBox").innerHTML=`<img src="img/${SPECIAL.img}.jpg" alt=""><div class=
 // actions
 $("#waBtn").href=wa(`Hi ME3! `);
 $("#mapBtn").href=MAPS;
-const cardLink=()=>"https://crispinroyce-code.github.io/Me3/";
+const cardLink=()=>"https://me3cafe.github.io/";
 async function copy(text,msg){try{await navigator.clipboard.writeText(text);toast(msg);}catch(e){toast(text);}}
 $("#shareBtn").onclick=()=>copy(`ME3 Café & Pastry Shop, Cape Coast: menu, photos & reviews 👉 ${cardLink()}`,"Link copied. Paste it into WhatsApp or SMS");
 $("#copyLink").onclick=()=>copy(cardLink(),"Card link copied");
