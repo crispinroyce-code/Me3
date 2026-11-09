@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ME3 Café &amp; Pastry Shop · Cape Coast</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f1e8; --card:#fffbf5; --ink:#2b1a14; --muted:#7c6a5d;
+    --brand:#c4162f; --brand-dk:#8f0f22; --sky:#2a9fd8; --line:#eedfcc; --gold:#e0a73a; --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:480px;margin:0 auto;min-height:100vh;background:var(--card);box-shadow:0 0 0 1px var(--line);position:relative;padding-bottom:96px}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;margin:0}
+  a{color:inherit}
+  img{display:block}
+
+  .hero{position:relative;height:200px;overflow:hidden;background:#3a1a14}
+  .hero img{width:100%;height:100%;object-fit:cover}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(43,26,20,.55))}
+  .id{display:flex;gap:14px;align-items:flex-end;padding:0 20px;margin-top:-48px;position:relative;z-index:2}
+  .logo{width:96px;height:96px;border-radius:50%;flex:none;background:#fff;border:4px solid var(--card);box-shadow:0 6px 20px rgba(43,26,20,.2);display:grid;place-items:center;position:relative}
+  .logo::before{content:"";position:absolute;inset:7px;border-radius:50%;border:3px dashed var(--sky)}
+  .logo span{font-family:Fraunces,serif;font-weight:900;font-size:30px;color:var(--brand);letter-spacing:-.5px}
+  .id-text{padding-bottom:2px;min-width:0}
+  .id-text h1{font-size:25px;line-height:1.08}
+  .tagline{color:var(--muted);font-size:13.5px;margin-top:4px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:14px 20px 0}
+  .chip{font-size:12px;padding:5px 10px;border-radius:99px;background:#f3e6d4;color:#5b4433;font-weight:500}
+  .status{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:8px;height:8px;border-radius:50%;background:#999}
+  .open{background:#e3f4e8;color:#17663a}.open .dot{background:#2e9d5b;box-shadow:0 0 0 3px rgba(46,157,91,.2)}
+  .closed{background:#fbe3e3;color:#8f1d1d}.closed .dot{background:#c0392b}
+
+  .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 20px 4px}
+  .act{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-size:12px;font-weight:500;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 4px;cursor:pointer;font-family:inherit}
+  .act svg{width:22px;height:22px}
+  .act.wa{background:#e7f6ec;border-color:#bfe5cc;color:#14663a}
+  .act:active{transform:scale(.97)}
+
+  .tabs{position:sticky;top:0;z-index:5;background:var(--card);display:flex;gap:4px;padding:10px 12px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;margin-top:12px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none;border:0;background:transparent;font-family:inherit;font-size:14px;font-weight:500;color:var(--muted);padding:9px 14px;border-radius:99px;cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--brand);color:#fff}
+  section.panel{display:none;padding:18px 20px}
+  section.panel.on{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+  .h2{font-size:20px;margin:8px 0 12px}
+  .box{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+  .muted{color:var(--muted)}
+  .row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px dashed var(--line)}
+  .row:first-child{border-top:0;padding-top:0}
+  .row svg{width:20px;height:20px;flex:none;color:var(--brand);margin-top:2px}
+  .row small{display:block;color:var(--muted)}
+  .hours td{padding:5px 0;font-size:14px}
+  .hours td:last-child{text-align:right;color:var(--muted)}
+  .hours tr.today td{font-weight:700;color:var(--ink)}
+  .special{display:flex;gap:0;padding:0;overflow:hidden;border:0;background:linear-gradient(135deg,var(--brand-dk),var(--brand));color:#fff}
+  .special img{width:120px;object-fit:cover;flex:none}
+  .special .sp{padding:14px 16px}
+  .special .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+  .special h3{font-size:20px;margin:4px 0}
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:11px}
+  .week div{padding:8px 2px;border-radius:10px;background:#f7efe4}
+  .week div.today{outline:2px solid var(--brand)}
+  .week b{display:block;font-size:12px;margin-bottom:2px}
+  .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+  .stat div{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center}
+  .stat b{display:block;font-family:Fraunces,serif;font-size:20px;color:var(--brand)}
+  .stat span{font-size:11.5px;color:var(--muted)}
+
+  .search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);font-family:inherit;font-size:15px;background:#fff;margin-bottom:10px}
+  .cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px;scrollbar-width:none}
+  .cats::-webkit-scrollbar{display:none}
+  .cat{flex:none;border:1px solid var(--line);background:#fff;font-family:inherit;font-size:13px;padding:7px 12px;border-radius:99px;cursor:pointer}
+  .cat.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .cat-title{font-family:Fraunces,serif;font-size:18px;margin:18px 0 2px;color:var(--brand)}
+  .cat-note{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+  .dish{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .dish .thumb{width:70px;height:70px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:30px;background:#f6e8d6;overflow:hidden}
+  .dish .thumb img{width:100%;height:100%;object-fit:cover}
+  .dish .info{flex:1;min-width:0}
+  .dish .name{font-weight:700}
+  .dish .desc{font-size:13px;color:var(--muted);margin-top:2px;line-height:1.4}
+  .dish .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+  .dish .p{font-size:12.5px;color:var(--muted)}
+  .tag{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 6px;border-radius:5px;background:#fde3d0;color:#9a3412;margin-left:6px;vertical-align:middle;white-space:nowrap}
+  .add{border:0;background:var(--ink);color:#fff;font-family:inherit;font-weight:700;font-size:13px;border-radius:99px;padding:6px 14px;cursor:pointer}
+  .qty{display:inline-flex;align-items:center;gap:8px;background:#f3e6d4;border-radius:99px;padding:2px}
+  .qty button{width:28px;height:28px;border-radius:50%;border:0;background:#fff;font-size:16px;cursor:pointer}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .ph{aspect-ratio:1;border-radius:10px;cursor:pointer;overflow:hidden;border:0;padding:0;background:#eee}
+  .ph img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+  .ph:hover img{transform:scale(1.05)}
+  .ph.big{grid-column:span 2;grid-row:span 2}
+  .lightbox{position:fixed;inset:0;background:rgba(20,10,8,.94);display:none;z-index:50;align-items:center;justify-content:center;flex-direction:column;padding:24px;color:#fff;text-align:center}
+  .lightbox.on{display:flex}
+  .lightbox img{width:min(88vw,440px);border-radius:14px}
+  .lightbox p{margin:14px 0 0;max-width:440px}
+  .lbnav{display:flex;gap:10px;margin-top:14px}
+  .lbnav button,.x{background:rgba(255,255,255,.15);color:#fff;border:0;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}
+  .x{position:absolute;top:14px;right:16px}
+
+  .score{display:flex;gap:16px;align-items:center}
+  .big-num{font-family:Fraunces,serif;font-size:44px;font-weight:900;line-height:1;color:var(--brand)}
+  .praise{display:flex;flex-wrap:wrap;gap:6px}
+  .rev .who{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff}
+  .rev p{margin:0;font-size:15px;line-height:1.55}
+  .rec{font-size:12px;color:#17663a;font-weight:700}
+  .reply{margin-top:10px;padding:10px 12px;background:#f7efe4;border-radius:12px;font-size:13.5px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:14px;border:1px solid var(--line);background:#fff;font-family:inherit;font-size:15px;font-weight:700;text-decoration:none;color:var(--ink);cursor:pointer}
+  .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .btn.green{background:#25d366;color:#08351b;border-color:#25d366}
+  .btn + .btn{margin-top:8px}
+
+  .feature{display:flex;gap:12px;align-items:flex-start}
+  .feature .ico{width:44px;height:44px;border-radius:12px;background:#f3e6d4;display:grid;place-items:center;font-size:21px;flex:none}
+  .feature h3{font-size:17px}
+  .feature p{margin:4px 0 12px;font-size:14px;color:var(--muted);line-height:1.45}
+  .form{display:grid;gap:6px;margin-bottom:8px}
+  .form .two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .form .search{margin:0}
+  .qr{display:grid;place-items:center;padding:10px}
+  .qr svg{width:180px;height:180px}
+
+  .tray{position:fixed;left:50%;transform:translateX(-50%) translateY(140%);bottom:12px;width:min(456px,calc(100% - 24px));background:var(--ink);color:#fff;border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;z-index:20;transition:transform .3s ease;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .tray.on{transform:translateX(-50%) translateY(0)}
+  .tray .t{flex:1;font-size:13px;min-width:0}
+  .tray .t b{display:block;font-size:16px}
+  .tray a{background:#25d366;color:#08351b;text-decoration:none;font-weight:700;padding:10px 14px;border-radius:12px;font-size:14px;white-space:nowrap}
+  .toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;z-index:60;pointer-events:none;max-width:90vw;text-align:center}
+  .toast.on{opacity:1}
+  footer{text-align:center;font-size:12px;color:var(--muted);padding:10px 20px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero"><img src="img/cover.jpg" alt="ME3 Café cakes and pastries"></div>
+  <div class="id">
+    <div class="logo"><span>Me3</span></div>
+    <div class="id-text">
+      <h1>ME3 Café &amp; Pastry Shop</h1>
+      <div class="tagline">Fresh-baked pastries, breakfast &amp; lunch · Cape Coast, Ghana</div>
+    </div>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <div class="actions">
+    <a class="act" id="callBtn" href="tel:+233552058477"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Call</a>
+    <a class="act wa" id="waBtn" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3z"/></svg>WhatsApp</a>
+    <a class="act" id="mapBtn" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Directions</a>
+    <button class="act" id="shareBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</button>
+  </div>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-t="home">Home</button>
+    <button class="tab" role="tab" data-t="menu">Menu</button>
+    <button class="tab" role="tab" data-t="photos">Photos</button>
+    <button class="tab" role="tab" data-t="reviews">Reviews</button>
+    <button class="tab" role="tab" data-t="cakes">Cakes &amp; Catering</button>
+  </nav>
+
+  <!-- HOME -->
+  <section class="panel" id="home">
+    <div class="box special" id="specialBox"></div>
+    <h2 class="h2">This week at ME3</h2>
+    <div class="week" id="week"></div>
+    <h2 class="h2" style="margin-top:20px">About us</h2>
+    <p style="margin-top:0;line-height:1.6" class="muted">Our mission is to provide daily fresh baked pastries, breakfast and lunch to our community, for families to enjoy time together with good food and feel comfortable in a relaxed environment.</p>
+    <p style="line-height:1.6" class="muted">We serve both <b style="color:var(--ink)">Ghanaian and American</b> meals. We bake our own burger buns, squeeze our own juices with no added colouring, and make every cake to order.</p>
+    <div class="stat">
+      <div><b>8–5</b><span>Mon – Sat</span></div>
+      <div><b>All day</b><span>Breakfast</span></div>
+      <div><b>🛵</b><span>Delivery available</span></div>
+    </div>
+    <div class="box" id="contactBox"></div>
+    <h2 class="h2">Opening hours</h2>
+    <div class="box"><table class="hours" style="width:100%;border-collapse:collapse" id="hours"></table></div>
+  </section>
+
+  <!-- MENU -->
+  <section class="panel" id="menu">
+    <input class="search" id="search" placeholder="Search the menu…" type="search">
+    <div class="cats" id="cats"></div>
+    <div id="menuList"></div>
+    <p class="muted" style="font-size:12.5px;margin-top:14px">Tap <b>Add</b> on anything you'd like, then send your order to us on WhatsApp. We'll confirm prices and pickup or delivery.</p>
+  </section>
+
+  <!-- PHOTOS -->
+  <section class="panel" id="photos">
+    <h2 class="h2">Fresh from the ME3 kitchen</h2>
+    <div class="grid" id="grid"></div>
+    <a class="btn" style="margin-top:14px" href="https://www.instagram.com/_me3.cafe_cape_coast/" target="_blank" rel="noopener">See more on Instagram</a>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="panel" id="reviews">
+    <div class="box score">
+      <div style="text-align:center;flex:none"><div class="big-num">100%</div><div class="muted" style="font-size:12px">recommend ME3<br>(3 Facebook reviews)</div></div>
+      <div class="praise" id="praise"></div>
+    </div>
+    <div id="revList"></div>
+    <a class="btn primary" href="https://www.facebook.com/me3cafe/reviews" target="_blank" rel="noopener">★ Leave us a review on Facebook</a>
+  </section>
+
+  <!-- CAKES & CATERING -->
+  <section class="panel" id="cakes">
+    <div class="box">
+      <div class="feature"><div class="ico">🎂</div><div><h3>Pre-order a cake</h3><p>Personalised cakes &amp; cupcakes for any occasion. Please order at least <b>1 week ahead</b>. Ask us about hiding a message or money inside as a surprise.</p></div></div>
+      <div class="form">
+        <div class="two">
+          <select class="search" id="cOcc"><option>Birthday</option><option>Wedding</option><option>Anniversary</option><option>Kid's party</option><option>Graduation</option><option>Surprise cake</option><option>Cupcakes</option><option>Other</option></select>
+          <input class="search" type="date" id="cDate" aria-label="Date needed">
+        </div>
+        <div class="two">
+          <input class="search" type="number" min="1" id="cPpl" placeholder="Servings" aria-label="Servings">
+          <input class="search" id="cFlav" placeholder="Flavour (e.g. red velvet)">
+        </div>
+        <input class="search" id="cMsg" placeholder="Writing on the cake (optional)">
+      </div>
+      <a class="btn green" id="waCake" href="#" target="_blank" rel="noopener">Send cake request on WhatsApp</a>
+    </div>
+    <div class="box">
+      <div class="feature"><div class="ico">🍱</div><div><h3>Catering &amp; party packs</h3><p>Ghanaian and American meals for offices, churches, birthdays and weddings. Small chops, pastry packs, cookie packs and edible gifts too. Mix and match, we work with your choice.</p></div></div>
+      <a class="btn" id="waCater" href="#" target="_blank" rel="noopener">Ask about catering</a>
+    </div>
+    <div class="box">
+      <div class="feature"><div class="ico">👩🏾‍🍳</div><div><h3>Cake &amp; pastry classes</h3><p>Learn to bake and decorate with ME3. Message us for upcoming class dates.</p></div></div>
+      <a class="btn" id="waClass" href="#" target="_blank" rel="noopener">Ask about classes</a>
+    </div>
+    <div class="box">
+      <h3 style="font-size:17px;text-align:center">Scan to open this card</h3>
+      <div class="qr" id="qr"></div>
+      <p class="muted" style="text-align:center;font-size:13px;margin:0">Print it on receipts, cake boxes, or the shop window.</p>
+      <div style="margin-top:12px"><button class="btn" id="copyLink" type="button">Copy card link</button></div>
+    </div>
+    <div class="box">
+      <h3 style="font-size:17px;margin-bottom:10px">Follow us</h3>
+      <a class="btn" href="https://www.facebook.com/me3cafe" target="_blank" rel="noopener">Facebook · ME3 Cafe and Pastry shop</a>
+      <a class="btn" href="https://www.instagram.com/_me3.cafe_cape_coast/" target="_blank" rel="noopener">Instagram · @_me3.cafe_cape_coast</a>
+    </div>
+  </section>
+
+  <footer>© <span id="yr"></span> ME3 Café &amp; Pastry Shop · Above SonTurk Supermarket, Kakumdu, Cape Coast</footer>
+</div>
+
+<div class="tray" id="tray"><div class="t"><b id="trayCount"></b><span id="trayList"></span></div><button class="add" id="clearOrder" style="background:transparent;border:1px solid #fff5">Clear</button><a id="traySend" href="#" target="_blank" rel="noopener">Send order</a></div>
+<div class="lightbox" id="lb"><button class="x" id="lbx" aria-label="Close">✕</button><img id="lbimg" alt=""><p id="lbcap"></p><div class="lbnav"><button id="lbp" aria-label="Previous">‹</button><button id="lbn" aria-label="Next">›</button></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+const NAME="ME3 Café & Pastry Shop";
+const WA="233552058477";
+const MAPS="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("SonTurk Supermarket Kakumdu Cape Coast Ghana");
+const HOURS={0:null,1:["08:00","17:00"],2:["08:00","17:00"],3:["08:00","17:00"],4:["08:00","17:00"],5:["08:00","17:00"],6:["08:00","17:00"]};
+const TZ="Africa/Accra";
+
+const MENU=[
+  {cat:"Breakfast",note:"Served all day, Monday to Saturday",items:[
+    {name:"French toast breakfast",desc:"Golden French toast with sausages and fried eggs",img:"frenchtoast",tag:"Best brunch"},
+    {name:"Waffle breakfast",desc:"Fresh waffles with boiled eggs, sausage and syrup",img:"waffles"},
+    {name:"Chicken & waffles",desc:"Crispy fried chicken strips on a fresh waffle",img:"chickenwaffle",tag:"Popular"},
+  ]},
+  {cat:"Lunch",note:"Burger buns baked fresh in-house",items:[
+    {name:"Cheeseburger & fries",desc:"Double beef patty, cheese, lettuce and tomato",img:"cheeseburger",tag:"Fan favourite"},
+    {name:"Crispy chicken burger & fries",desc:"Fried chicken fillet with fresh salad",img:"burger"},
+    {name:"Sandwich & fries",desc:"Toasted sandwich loaded with filling and greens",img:"sandwich"},
+    {name:"Chicken wrap",desc:"Crispy chicken, avocado, onion and salad, wrapped to go",img:"wrap"},
+    {name:"Chicken strips & fries",desc:"Crunchy strips with dipping sauce",img:"chickenfries"},
+    {name:"Fresh salad",desc:"Washed in vinegar water, served with your choice of dressing",emoji:"🥗"},
+  ]},
+  {cat:"Ghanaian",note:"Ghanaian specials, usually Saturdays",items:[
+    {name:"Jollof rice & chicken",desc:"Party-style jollof with chicken",emoji:"🍛",tag:"Saturday"},
+    {name:"Banku & fried tilapia",desc:"With fresh pepper and salad",emoji:"🐟",tag:"Saturday"},
+  ]},
+  {cat:"Pastries",note:"Baked fresh daily",items:[
+    {name:"Donuts",desc:"Freshly fried. Special fillings on Donut Mondays",img:"doughnuts",tag:"Mondays"},
+    {name:"Spring rolls",desc:"Crisp pastry rolls with savoury filling",img:"springrolls"},
+    {name:"Fruit pie",desc:"Lattice-top pie, whole or by the slice",img:"pie"},
+    {name:"Chocolate chip cookies",desc:"Right out of the oven. Gift packs available",emoji:"🍪"},
+    {name:"Churros",desc:"Soft inside, crispy outside",emoji:"🥖"},
+  ]},
+  {cat:"Drinks",items:[
+    {name:"American brew coffee",desc:"Hot, fresh brewed",img:"coffee"},
+    {name:"Cappuccino",desc:"",emoji:"☕"},
+    {name:"Hot chocolate",desc:"",emoji:"🍫"},
+    {name:"Hot tea",desc:"",emoji:"🫖"},
+    {name:"Fresh fruit juice",desc:"Loaded with fruit and vegetables, no colouring, no tap water",emoji:"🧃",tag:"All natural"},
+    {name:"Mixed fruit cup",desc:"Fresh-cut seasonal fruit",emoji:"🍉"},
+  ]},
+  {cat:"Cakes",note:"Pre-order 1 week ahead",items:[
+    {name:"Personalised celebration cake",desc:"Birthdays, anniversaries, any occasion",img:"bdaycake"},
+    {name:"Wedding cake",desc:"Tiered and decorated to your theme",img:"weddingcake"},
+    {name:"Cookies & cream cake",desc:"",img:"oreocake"},
+    {name:"Drip cake",desc:"",img:"dripcake"},
+    {name:"Cupcakes",desc:"Personalised for your event",emoji:"🧁"},
+  ]},
+];
+const PHOTOS=[
+  ["cheeseburger","Cheeseburger with a fresh-baked bun"],["chickenwaffle","Chicken & waffles"],["frenchtoast","French toast breakfast"],
+  ["burger","Crispy chicken burger & fries"],["wrap","Chicken wraps"],["sandwich","Sandwich & fries"],
+  ["doughnuts","Fresh donuts"],["coffee","American brew coffee"],["chickenfries","Chicken strips & fries"],
+  ["bdaycake","Personalised birthday cake"],["dripcake","Drip cake"],["oreocake","Cookies & cream cake"],
+  ["weddingcake","Wedding cake"],["pie","Fruit pie"],["springrolls","Spring rolls"],
+  ["waffles","Waffle breakfast"],["catering","Catering spread"],["flyer","Saturday: banku & tilapia, jollof & chicken"],
+];
+const REVIEWS=[
+  {who:"Adams Naomi KarnettaLee",when:"5 years ago",text:"Thank you Sister Ann for the delicious food and pastries. Tasted like AMERICA to me. I'll be back soon",reply:"Thank you so much!"},
+  {who:"Booster Brand",when:"",text:"If you want the best for a group or yourself don't hesitate to contact them because they've got the best for you always."},
+  {who:"Agro Eco Logic",when:"2 years ago",text:"Great food, great service"},
+];
+const PRAISE=["Child-friendly","Fast delivery","Indoor dining","Great dessert","Large portions","Best brunch"];
+const WEEK=[["Sun","Closed"],["Mon","Donut Monday 🍩"],["Tue","Breakfast & lunch"],["Wed","Breakfast & lunch"],["Thu","Breakfast & lunch"],["Fri","Breakfast & lunch"],["Sat","Ghanaian specials 🍛"]];
+
+const $=s=>document.querySelector(s);
+const wa=msg=>`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const toast=t=>{const el=$("#toast");el.textContent=t;el.classList.add("on");setTimeout(()=>el.classList.remove("on"),2000);};
+$("#yr").textContent=new Date().getFullYear();
+
+// time in Cape Coast
+let d,mins;
+try{const p=new Intl.DateTimeFormat("en-US",{timeZone:TZ,weekday:"short",hour:"numeric",minute:"numeric",hour12:false}).formatToParts(new Date());
+  const g=t=>p.find(x=>x.type===t).value; d=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(g("weekday")); mins=(+g("hour")%24)*60+ +g("minute");}
+catch(e){const n=new Date();d=n.getDay();mins=n.getHours()*60+n.getMinutes();}
+const toM=t=>{const[h,m]=t.split(":").map(Number);return h*60+m;};
+const fmt=t=>{let[h,m]=t.split(":").map(Number);const ap=h>=12?"pm":"am";h=h%12||12;return h+(m?":"+String(m).padStart(2,"0"):"")+ap;};
+const today=HOURS[d], isOpen=today&&mins>=toM(today[0])&&mins<toM(today[1]);
+let st; if(isOpen) st="Open now · until "+fmt(today[1]); else if(today&&mins<toM(today[0])) st="Closed · opens "+fmt(today[0]); else { let n=(d+1)%7; while(!HOURS[n]) n=(n+1)%7; st="Closed · opens "+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][n]+" "+fmt(HOURS[n][0]); }
+$("#chips").innerHTML=`<span class="chip status ${isOpen?"open":"closed"}"><span class="dot"></span>${st}</span>`+["Dine-in","Takeaway","Delivery","Ghanaian & American"].map(c=>`<span class="chip">${c}</span>`).join("");
+const DN=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+$("#hours").innerHTML=[1,2,3,4,5,6,0].map(i=>`<tr class="${i===d?"today":""}"><td>${DN[i]}${i===d?" (today)":""}</td><td>${HOURS[i]?fmt(HOURS[i][0])+" – "+fmt(HOURS[i][1]):"Closed"}</td></tr>`).join("")+`<tr><td colspan="2" style="font-size:12px;color:var(--muted);padding-top:8px">Times are Cape Coast (GMT). Donuts on Mondays from 10am.</td></tr>`;
+$("#week").innerHTML=WEEK.map((w,i)=>`<div class="${i===d?"today":""}"><b>${w[0]}</b>${w[1]}</div>`).join("");
+
+// special of the day
+const SPECIAL = d===1 ? {img:"doughnuts",lbl:"Today · Donut Monday",t:"Freshly fried donuts",s:"Special fillings, Mondays only. Get them before they're gone!"}
+  : d===6 ? {img:"flyer",lbl:"Today · Saturday specials",t:"Jollof & chicken · Banku & tilapia",s:"Ghanaian favourites, made fresh this Saturday."}
+  : d===0 ? {img:"chickenwaffle",lbl:"We're resting today",t:"See you Monday at 8am",s:"Monday is Donut Day. Message us to pre-order."}
+  : {img:"chickenwaffle",lbl:"Breakfast all day",t:"Chicken & waffles",s:"Or French toast, burgers, wraps and fresh juice. Delivery available."};
+$("#specialBox").innerHTML=`<img src="img/${SPECIAL.img}.jpg" alt=""><div class="sp"><div class="lbl">${SPECIAL.lbl}</div><h3>${SPECIAL.t}</h3><div style="font-size:13.5px;opacity:.92">${SPECIAL.s}</div></div>`;
+
+// actions
+$("#waBtn").href=wa(`Hi ME3! `);
+$("#mapBtn").href=MAPS;
+const cardLink=()=>"https://tinyurl.com/me3cafe";
+async function copy(text,msg){try{await navigator.clipboard.writeText(text);toast(msg);}catch(e){toast(text);}}
+$("#shareBtn").onclick=()=>copy(`ME3 Café & Pastry Shop, Cape Coast: menu, photos & reviews 👉 ${cardLink()}`,"Link copied. Paste it into WhatsApp or SMS");
+$("#copyLink").onclick=()=>copy(cardLink(),"Card link copied");
+
+const ico=p=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;
+$("#contactBox").innerHTML=`
+  <div class="row">${ico('<path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>')}<div>Above SonTurk Supermarket, opposite Wesley Girls' High School, Kakumdu, Cape Coast, Ghana<small><a href="${MAPS}" target="_blank" rel="noopener">Open in Google Maps</a></small></div></div>
+  <div class="row">${ico('<path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7l.7 2.7-1.8 3.4a16 16 0 0 0 6 6l3.4-1.8 2.7.7a2 2 0 0 1 1.7 2z"/>')}<div><a href="tel:+233552058477">+233 55 205 8477</a><small>Call or WhatsApp</small><div style="margin-top:6px"><a href="tel:+233204539679">+233 20 453 9679</a><small>Second line</small></div></div></div>
+  <div class="row">${ico('<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>')}<div><a href="mailto:me3cafeandpastryshop@gmail.com">me3cafeandpastryshop@gmail.com</a><small>Email</small></div></div>`;
+
+// menu + order
+const order={}; let activeCat="All";
+const all=MENU.flatMap((c,ci)=>c.items.map((it,ii)=>({...it,key:ci+"-"+ii})));
+const thumb=it=>it.img?`<img src="img/${it.img}.jpg" alt="" loading="lazy">`:(it.emoji||"🍽️");
+function renderCats(){$("#cats").innerHTML=["All",...MENU.map(c=>c.cat)].map(c=>`<button class="cat ${c===activeCat?"on":""}" data-c="${c}">${c}</button>`).join("");}
+function renderMenu(){
+  const q=$("#search").value.trim().toLowerCase();let h="";
+  MENU.forEach((c,ci)=>{
+    if(activeCat!=="All"&&c.cat!==activeCat)return;
+    const items=c.items.map((it,ii)=>({...it,key:ci+"-"+ii})).filter(it=>!q||(it.name+" "+it.desc+" "+c.cat).toLowerCase().includes(q));
+    if(!items.length)return;
+    h+=`<div class="cat-title">${c.cat}</div>${c.note?`<div class="cat-note">${c.note}</div>`:""}`;
+    items.forEach(it=>{const n=order[it.key]||0;
+      h+=`<div class="dish"><div class="thumb">${thumb(it)}</div><div class="info"><div class="name">${esc(it.name)}${it.tag?`<span class="tag">${it.tag}</span>`:""}</div>${it.desc?`<div class="desc">${esc(it.desc)}</div>`:""}
+      <div class="meta"><span class="p">Ask for price</span>${n?`<span class="qty"><button data-m="${it.key}" aria-label="Remove one">−</button><b>${n}</b><button data-p="${it.key}" aria-label="Add one">+</button></span>`:`<button class="add" data-p="${it.key}">Add</button>`}</div></div></div>`;});
+  });
+  $("#menuList").innerHTML=h||`<p class="muted">Nothing matches “${esc(q)}”. Message us and we'll see what we can make!</p>`;
+}
+function renderTray(){
+  const sel=all.filter(i=>order[i.key]); const count=sel.reduce((s,i)=>s+order[i.key],0);
+  $("#tray").classList.toggle("on",count>0);
+  $("#trayCount").textContent=count+" item"+(count===1?"":"s");
+  $("#trayList").textContent=sel.map(i=>i.name).join(", ").slice(0,48)+(sel.map(i=>i.name).join(", ").length>48?"…":"");
+  $("#traySend").href=wa(`Hi ME3! I'd like to order:\n${sel.map(i=>`• ${order[i.key]} × ${i.name}`).join("\n")}\n\nName:\nPickup or delivery:\nDelivery address (if delivery):`);
+}
+$("#cats").onclick=e=>{const b=e.target.closest(".cat");if(!b)return;activeCat=b.dataset.c;renderCats();renderMenu();};
+$("#search").oninput=renderMenu;
+$("#menuList").onclick=e=>{const p=e.target.dataset.p,m=e.target.dataset.m;if(p)order[p]=(order[p]||0)+1;if(m)order[m]=Math.max(0,(order[m]||0)-1);if(p||m){renderMenu();renderTray();}};
+$("#clearOrder").onclick=()=>{for(const k in order)delete order[k];renderMenu();renderTray();};
+renderCats();renderMenu();
+
+// photos
+$("#grid").innerHTML=PHOTOS.map((p,i)=>`<button class="ph ${i===0?"big":""}" data-i="${i}" aria-label="${esc(p[1])}"><img src="img/${p[0]}.jpg" alt="${esc(p[1])}" loading="lazy"></button>`).join("");
+let cur=0;
+const openLb=i=>{cur=(i+PHOTOS.length)%PHOTOS.length;$("#lbimg").src=`img/${PHOTOS[cur][0]}.jpg`;$("#lbcap").textContent=PHOTOS[cur][1];$("#lb").classList.add("on");};
+$("#grid").onclick=e=>{const b=e.target.closest(".ph");if(b)openLb(+b.dataset.i);};
+$("#lbx").onclick=()=>$("#lb").classList.remove("on");
+$("#lbp").onclick=()=>openLb(cur-1);$("#lbn").onclick=()=>openLb(cur+1);
+$("#lb").onclick=e=>{if(e.target.id==="lb")$("#lb").classList.remove("on");};
+addEventListener("keydown",e=>{if(!$("#lb").classList.contains("on"))return;if(e.key==="Escape")$("#lb").classList.remove("on");if(e.key==="ArrowLeft")openLb(cur-1);if(e.key==="ArrowRight")openLb(cur+1);});
+
+// reviews
+$("#praise").innerHTML=PRAISE.map(p=>`<span class="chip">👍 ${p}</span>`).join("");
+const avc=["#c4162f","#2a9fd8","#8a5a2b"];
+$("#revList").innerHTML=REVIEWS.map((r,i)=>`<div class="box rev"><div class="who"><div class="av" style="background:${avc[i%3]}">${esc(r.who[0])}</div><div><b>${esc(r.who)}</b><div class="rec">✓ Recommends ME3${r.when?` <span class="muted" style="font-weight:400">· ${r.when}</span>`:""}</div></div></div><p>“${esc(r.text)}”</p>${r.reply?`<div class="reply"><b>ME3 replied:</b> ${esc(r.reply)}</div>`:""}</div>`).join("");
+
+// cakes & catering
+const cakeUpd=()=>{$("#waCake").href=wa(`Hi ME3! I'd like to pre-order a cake.\nOccasion: ${$("#cOcc").value}\nDate needed: ${$("#cDate").value||"—"}\nServings: ${$("#cPpl").value||"—"}\nFlavour: ${$("#cFlav").value||"—"}\nWriting on cake: ${$("#cMsg").value||"—"}`);};
+["cOcc","cDate","cPpl","cFlav","cMsg"].forEach(id=>$("#"+id).oninput=cakeUpd);cakeUpd();
+$("#waCater").href=wa(`Hi ME3! I'm interested in catering.\nEvent:\nDate:\nNumber of guests:\nGhanaian, American or both:`);
+$("#waClass").href=wa(`Hi ME3! I'm interested in your cake & pastry classes. When is the next one?`);
+try{const qr=qrcode(0,"M");qr.addData(cardLink());qr.make();$("#qr").innerHTML=qr.createSvgTag({scalable:true,margin:2});}catch(e){$("#qr").innerHTML='<p class="muted">QR unavailable</p>';}
+
+// tabs with shareable hash (#menu, #photos, #reviews, #cakes)
+const TABS=["home","menu","photos","reviews","cakes"];
+function show(t){if(!TABS.includes(t))t="home";
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id===t));}
+$("#tabs").onclick=e=>{const b=e.target.closest(".tab");if(!b)return;const t=b.dataset.t;
+  try{history.replaceState(null,"",t==="home"?location.pathname+location.search:"#"+t);}catch(_){}
+  show(t);if(window.scrollY>$("#tabs").offsetTop)$("#tabs").scrollIntoView({block:"start"});};
+addEventListener("hashchange",()=>show(location.hash.slice(1)));
+show(location.hash.slice(1));
+</script>
+</body>
+</html>
